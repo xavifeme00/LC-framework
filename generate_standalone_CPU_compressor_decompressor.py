@@ -282,8 +282,3 @@ pattern = r'/\*##[^#]+##\*/'
 cpp_code = [line for line in cpp_code if not re.match(pattern, line.strip())]
 with open(dec_file_path, "w") as file:
     file.write("".join(cpp_code))
-
-print("Compile encoder with:\ng++ -O3 -march=native -fopenmp -mno-fma -I. -std=c++17 -o compress compressor-standalone.cpp")
-print("\nRun encoder with:\n./compress input_file_name compressed_file_name [y]")
-print("\nCompile decoder with:\ng++ -O3 -march=native -fopenmp -mno-fma -I. -std=c++17 -o decompress decompressor-standalone.cpp")
-print("\nRun decoder with:\n./decompress compressed_file_name decompressed_file_name [y]\n")
