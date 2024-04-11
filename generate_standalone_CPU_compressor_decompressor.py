@@ -46,9 +46,9 @@ import math
 import shutil
 import sys
 
-
+dir = os.path.dirname(os.path.abspath(__file__))
 # read available components
-cfiles = next(os.walk('./components'))[2]
+cfiles = next(os.walk(os.path.join(dir, 'components')))[2]
 cpucomps = []
 for f in cfiles:
   if f.startswith("h_"):
@@ -56,7 +56,7 @@ for f in cfiles:
 cpucomps.sort()
 
 # read available preprocessors
-pfiles = next(os.walk('./preprocessors'))[2]
+pfiles = next(os.walk(os.path.join(dir, 'preprocessors')))[2]
 cpupres = []
 for f in pfiles:
   if f.startswith("h_"):
@@ -96,8 +96,8 @@ for name in preprocessor_names:
 #component_names = [arg.strip('"') for arg in sys.argv[2:]]
 
 # generate lc framework
-shutil.copyfile('compressor-framework.cpp', 'compressor-standalone.cpp')
-shutil.copyfile('decompressor-framework.cpp', 'decompressor-standalone.cpp')
+shutil.copyfile(os.path.join(dir, 'compressor-framework.cpp'), os.path.join(dir, 'compressor-standalone.cpp'))
+shutil.copyfile(os.path.join(dir, 'decompressor-framework.cpp'), os.path.join(dir, 'decompressor-standalone.cpp'))
 
 comp_list = []
 for f in component_names:
@@ -133,7 +133,7 @@ for x in pre_list:
     pre_uni.append(x)
 
 # update include list
-with open("compressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "compressor-standalone.cpp"), "r+") as f:
   contents = f.read()
   m = re.search(r"##include-beg##[\s\S]*##include-end##", contents)
   str_to_add = ''
@@ -147,7 +147,7 @@ with open("compressor-standalone.cpp", "r+") as f:
   f.truncate()
   f.write(contents)
 
-with open("decompressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "decompressor-standalone.cpp"), "r+") as f:
   contents = f.read()
   m = re.search(r"##include-beg##[\s\S]*##include-end##", contents)
   str_to_add = ''
@@ -161,7 +161,7 @@ with open("decompressor-standalone.cpp", "r+") as f:
   f.write(contents)
 
 # update print
-with open("compressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "compressor-standalone.cpp"), "r+") as f:
   contents = f.read()
   m = re.search(r"##print-beg##[\s\S]*##print-end##", contents)
   str_to_add = '  printf(\"CPU LC 1.2 Algorithm:'
@@ -176,7 +176,7 @@ with open("compressor-standalone.cpp", "r+") as f:
   f.truncate()
   f.write(contents)
 
-with open("decompressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "decompressor-standalone.cpp"), "r+") as f:
   contents = f.read()
   m = re.search(r"##print-beg##[\s\S]*##print-end##", contents)
   str_to_add = '  printf(\"CPU LC 1.2 Algorithm:'
@@ -191,7 +191,7 @@ with open("decompressor-standalone.cpp", "r+") as f:
   f.write(contents)
 
 # update comp encoder
-with open("compressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "compressor-standalone.cpp"), "r+") as f:
   contents = f.read()
   m = re.search(r"##comp-encoder-beg##[\s\S]*##comp-encoder-end##", contents)
   str_to_add = ''
@@ -204,7 +204,7 @@ with open("compressor-standalone.cpp", "r+") as f:
   f.write(contents)
 
 # update pre encoder
-with open("compressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "compressor-standalone.cpp"), "r+") as f:
     contents = f.read()
     m = re.search(r"##pre-encoder-beg##[\s\S]*##pre-encoder-end##", contents)
     str_to_add = ''
@@ -230,7 +230,7 @@ with open("compressor-standalone.cpp", "r+") as f:
 comp_list.reverse()
 
 # update pre decoder
-with open("decompressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "decompressor-standalone.cpp"), "r+") as f:
     contents = f.read()
     m = re.search(r"##pre-decoder-beg##[\s\S]*##pre-decoder-end##", contents)
     str_to_add = ''
@@ -254,7 +254,7 @@ with open("decompressor-standalone.cpp", "r+") as f:
     f.write(contents)
 
 # update comp decoder
-with open("decompressor-standalone.cpp", "r+") as f:
+with open(os.path.join(dir, "decompressor-standalone.cpp"), "r+") as f:
   contents = f.read()
   m = re.search(r"##comp-decoder-beg##[\s\S]*##comp-decoder-end##", contents)
   str_to_add = ''
@@ -267,7 +267,7 @@ with open("decompressor-standalone.cpp", "r+") as f:
   f.write(contents)
 
 # Get rid of tags
-enc_file_path = "compressor-standalone.cpp"
+enc_file_path = os.path.join(dir, "compressor-standalone.cpp")
 with open(enc_file_path, "r") as file:
     cpp_code = file.readlines()
 pattern = r'/\*##[^#]+##\*/'
@@ -275,7 +275,7 @@ cpp_code = [line for line in cpp_code if not re.match(pattern, line.strip())]
 with open(enc_file_path, "w") as file:
     file.write("".join(cpp_code))
 
-dec_file_path = "decompressor-standalone.cpp"
+dec_file_path = os.path.join(dir, "decompressor-standalone.cpp")
 with open(dec_file_path, "r") as file:
     cpp_code = file.readlines()
 pattern = r'/\*##[^#]+##\*/'
